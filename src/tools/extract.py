@@ -1,6 +1,7 @@
 
 import traceback
 from src.authorization.auth import *
+from src.tools.gee_utils import get_image, get_metadata, download_image_by_id
 from pathlib import Path
 import geemap
 import ee
@@ -11,58 +12,33 @@ PROJECT_ROOT = CURRENT_FILE.parents[2]
 DATA_DIR = PROJECT_ROOT / "data"
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
-
-def get_image_info(coordinates: list[float]) -> tuple[str, ee.Geometry]:
-
-    roi = ee.Geometry.Point(coordinates).buffer(450).bounds()
-
-    image = (
-        ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED')
-        .filterBounds(roi)
-        .filterDate('2024-08-01', '2024-10-30')
-        .filter(ee.Filter.lte('CLOUDY_PIXEL_PERCENTAGE', 10))
-        .sort('CLOUDY_PIXEL_PERCENTAGE')
-        .first()
-    )
-    full_id = image.get('system:id').getInfo()
-
-    return full_id, roi
-
-
-def download_image_by_id(image_id: str, output_path: str, image_roi: ee.Geometry) -> None:
-    image_to_download = ee.Image(image_id).select(['B4', 'B3', 'B2', 'B8']).clip(image_roi)
-
-    print(f'Downloading image... {image_to_download}')
-
-    try:
-        geemap.ee_export_image(
-            image_to_download,
-            filename=output_path,
-            scale=10,
-            region=image_roi,
-            file_per_band=False)
-
-        print('Image has been successfully downloaded to ' + output_path)
-
-    except Exception as e:
-        traceback.print_exc()
-
-
-
 if __name__ == "__main__":
 
     credentials = authenticate_google_api()
     initialize_earth_engine(credentials)
 
-    roi_coordinates = [22.229681, 50.554120]
+    data_to_find = {
+        "roi_coordinates":[22.229681, 50.554120],
+        "collection":'COPERNICUS/S2_SR_HARMONIZED',
+        "start_date":'2023-09-01',
+        "end_date":'2023-10-31',
+        "cloud_percentage": 30
+    }
 
-    img_id, roi = get_image_info(roi_coordinates)
+    img_id, roi = get_image(coordinates=data_to_find.get('roi_coordinates'),
+                            image_collection=data_to_find.get("collection"),
+                            start_date=data_to_find.get("start_date"),
+                            end_date=data_to_find.get("end_date"),
+                            cloud_percentage=data_to_find.get("cloud_percentage"),
+                            )
 
+    img_metadata = get_metadata(img_id)
+    print(img_metadata)
 
-
-    safe_id = img_id.replace("/", "_")
+    #safe_id = img_id.replace("/", "_")
+    product_id = img_metadata.get("product_id")
     os.makedirs("data", exist_ok=True)
-    target_path = DATA_DIR / f"{safe_id}.tif"
+    target_path = DATA_DIR / f"{product_id}.tif"
 
     print(f'Selected image id: {img_id}')
 

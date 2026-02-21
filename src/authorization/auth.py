@@ -4,7 +4,7 @@ from google.auth.transport.requests import Request
 import os.path
 import pickle
 from typing import Any
-from src.config import CLIENT_SECRET_FILE, CLIENT_TOKEN_PICKLE_FILE
+from src.config import CLIENT_SECRET_FILE
 
 
 SCOPES = ['https://www.googleapis.com/auth/earthengine',

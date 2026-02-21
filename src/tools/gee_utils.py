@@ -1,9 +1,9 @@
 import ee
-
+import geemap
 from src.authorization.auth import authenticate_google_api, initialize_earth_engine
+import traceback
+from datetime import datetime, timezone
 
-credentials = authenticate_google_api()
-initialize_earth_engine(credentials)
 
 def get_pm25(lat: float, lon: float, start_date: str, end_date: str) -> float:
     point = ee.Geometry.Point([lon, lat])
@@ -16,4 +16,67 @@ def get_pm25(lat: float, lon: float, start_date: str, end_date: str) -> float:
     return pm25_mean.getInfo()
 
 
-#def get_s2_img(lat: float, lon: float, start_date: str, end_date: str) -> float:
+def get_image(coordinates: list[float],
+                   image_collection: str,
+                   start_date: str,
+                   end_date: str,
+                   cloud_percentage: float | int
+                   ) -> tuple[str, ee.Geometry]:
+
+    roi = ee.Geometry.Point(coordinates).buffer(450).bounds()
+
+    image = (
+        ee.ImageCollection(image_collection)
+        .filterBounds(roi)
+        .filterDate(start_date, end_date)
+        .filter(ee.Filter.lte('CLOUDY_PIXEL_PERCENTAGE', cloud_percentage))
+        .sort('CLOUDY_PIXEL_PERCENTAGE')
+        .first()
+    )
+    full_id = image.get('system:id').getInfo()
+
+    return full_id, roi
+
+
+def get_metadata(image_id: str) -> dict[str, str]:
+    img = ee.Image(image_id)
+    props = img.toDictionary().getInfo()
+
+    time_start = props.get('system:time_start')
+    acquired_at = (
+        datetime.fromtimestamp(time_start/1000, tz=timezone.utc).isoformat()
+        if time_start else None
+    )
+
+    return {
+        "system_id": image_id,
+        "acquired_at": acquired_at,
+        "cloud_pct": props.get("CLOUDY_PIXEL_PERCENTAGE"),
+        "mgrs_tile": props.get("MGRS_TILE"),
+        "product_id": props.get("PRODUCT_ID"),
+        "platform": props.get("SPACECRAFT_NAME"),
+        "processing_baseline": props.get("PROCESSING_BASELINE"),
+    }
+
+
+def download_image_by_id(image_id: str,
+                         output_path: str,
+                         image_roi: ee.Geometry) -> None:
+    image_to_download = (ee.Image(image_id)
+                         .select(['B4', 'B3', 'B2', 'B8'])
+                         .clip(image_roi))
+
+    print(f'Downloading image... {image_to_download}')
+
+    try:
+        geemap.ee_export_image(
+            image_to_download,
+            filename=output_path,
+            scale=10,
+            region=image_roi,
+            file_per_band=False)
+
+        print('Image has been successfully downloaded to ' + output_path)
+
+    except Exception as e:
+        traceback.print_exc()
