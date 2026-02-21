@@ -1,7 +1,3 @@
-'''
-napisz mi narzedzie ktore zrobi predykcje czegos i jakie bedzie PPM
-'''
-
 from fastapi import FastAPI
 from pydantic import BaseModel
 import src.tools.gee_utils as gee
