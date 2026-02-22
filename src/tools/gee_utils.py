@@ -72,12 +72,14 @@ class S2Downloader:
 
         return {
             "image_id": image_system_id,
+            "product_id": metadata.get("PRODUCT_ID"),
             "acquired_at": acquired_at,
             "cloud_pct": metadata.get("CLOUDY_PIXEL_PERCENTAGE"),
             "mgrs_tile": metadata.get("MGRS_TILE"),
-            "product_id": metadata.get("PRODUCT_ID"),
             "platform": metadata.get("SPACECRAFT_NAME"),
             "processing_baseline": metadata.get("PROCESSING_BASELINE"),
+            "processing_level": metadata.get("PROCESSING_LEVEL"),
+            "product_type": metadata.get("PRODUCT_TYPE"),
         }
 
     def export_geotiff(
