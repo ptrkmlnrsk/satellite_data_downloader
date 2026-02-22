@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 
-#def get_pm25(lat: float, lon: float, start_date: str, end_date: str) -> float:
+# def get_pm25(lat: float, lon: float, start_date: str, end_date: str) -> float:
 #    point = ee.Geometry.Point([lon, lat])
 #    pm25_collection = (ee.ImageCollection('MODIS/061/MCD19A2_GRANULES')
 #                       .select('Optical_Depth_047')
@@ -15,6 +15,7 @@ from pathlib import Path
 #                 .reduceRegion(reducer=ee.Reducer.mean(),
 #                               geometry=point, scale=1000))
 #    return pm25_mean.getInfo()
+
 
 @dataclass
 class S2Config:
@@ -36,7 +37,9 @@ class S2Downloader:
         """
         return ee.Geometry.Point(self.cfg.roi_coordinates).buffer(buffer_m).bounds()
 
-    def find_image_id(self, roi: ee.Geometry, start_date: str, end_date: str) -> str | None:
+    def find_image_id(
+        self, roi: ee.Geometry, start_date: str, end_date: str
+    ) -> str | None:
         """
         Find image within collection and retrieve scene ID to download it.
         """
@@ -44,14 +47,14 @@ class S2Downloader:
             ee.ImageCollection(self.cfg.collection)
             .filterBounds(roi)
             .filterDate(start_date, end_date)
-            .filter(ee.Filter.lte('CLOUDY_PIXEL_PERCENTAGE', self.cfg.cloud_perc))
+            .filter(ee.Filter.lte("CLOUDY_PIXEL_PERCENTAGE", self.cfg.cloud_perc))
         )
 
         if collection.size().getInfo() == 0:
             return None
 
-        img = collection.sort('CLOUDY_PIXEL_PERCENTAGE').first()
-        return img.get('system:id').getInfo()
+        img = collection.sort("CLOUDY_PIXEL_PERCENTAGE").first()
+        return img.get("system:id").getInfo()
 
     @staticmethod
     def get_metadata_from_col_id(image_system_id: str) -> dict[str, str]:
@@ -63,11 +66,9 @@ class S2Downloader:
         img = ee.Image(image_system_id)
         metadata = img.toDictionary().getInfo()
 
-        acquired_at = (
-            datetime.fromtimestamp(
-                metadata.get('GENERATION_TIME')/1000, tz=timezone.utc)
-            .isoformat()
-        )
+        acquired_at = datetime.fromtimestamp(
+            metadata.get("GENERATION_TIME") / 1000, tz=timezone.utc
+        ).isoformat()
 
         return {
             "image_id": image_system_id,
@@ -79,15 +80,15 @@ class S2Downloader:
             "processing_baseline": metadata.get("PROCESSING_BASELINE"),
         }
 
-    def export_geotiff(self, image_id: str, image_roi: ee.Geometry, product_id: str) -> None:
-        image_to_download = (ee.Image(image_id)
-                             .select(self.cfg.bands)
-                             .clip(image_roi))
+    def export_geotiff(
+        self, image_id: str, image_roi: ee.Geometry, product_id: str
+    ) -> None:
+        image_to_download = ee.Image(image_id).select(self.cfg.bands).clip(image_roi)
 
         safe_id = product_id.replace("/", "_")
         output_name = self.cfg.datadir / f"{safe_id}.tif"
 
-        print(f'Downloading image... {image_to_download}')
+        print(f"Downloading image... {image_to_download}")
 
         try:
             geemap.ee_export_image(
@@ -95,9 +96,10 @@ class S2Downloader:
                 filename=str(output_name),
                 scale=10,
                 region=image_roi,
-                file_per_band=False)
+                file_per_band=False,
+            )
 
-            print('Image has been successfully downloaded to ', self.cfg.datadir)
+            print("Image has been successfully downloaded to ", self.cfg.datadir)
 
-        except Exception as e:
+        except Exception:
             traceback.print_exc()
