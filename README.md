@@ -8,5 +8,5 @@ For now main functions are:
 Next steps are: 
  - download parcels from ULDK and make them to be ROI
  - store parcels in DB
- - store Sentinel images on GCS or S3
  - create processing to calculate basic statistics and remote sensing indices
+
