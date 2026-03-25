@@ -41,7 +41,9 @@ def generate_cir():
 
 
 def calculate_ndvi(red_band: np.ndarray, nir_band: np.ndarray) -> np.ndarray:
-    pass
+    ndvi = np.full(red_band.shape, np.nan)
+    denom = denominate_bands(red_band, nir_band)
+    return np.divide(red_band - nir_band, denom, out=ndvi, where=denom != 0)
 
 
 def calculate_ndwi(green_band: np.ndarray, nir_band: np.ndarray) -> np.ndarray:
