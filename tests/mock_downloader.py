@@ -1,7 +1,7 @@
 from src.authorization.auth import authenticate_google_api, initialize_earth_engine
 from src.tools.gee_utils import get_bounds_from_coordinates
 from pathlib import Path
-from src.config import SentinelConfig
+from src.config import SatelliteConfig
 from src.pipeline.exporter_pipeline import Exporter
 from src.pipeline.downloader_pipeline import SentinelDownloader
 
@@ -17,15 +17,13 @@ if __name__ == "__main__":
     initialize_earth_engine(credentials)
 
     # some configs
-    s2_config = SentinelConfig(
+    s2_config = SatelliteConfig(
         collection="COPERNICUS/S2_SR_HARMONIZED",
         bands=["B4", "B3", "B2", "B8"],
-        roi_coordinates=[22.229681, 50.554120],
+        roi=[22.229681, 50.554120],
     )
 
-    roi = get_bounds_from_coordinates(
-        buffer_m=350, roi_coordinates=s2_config.roi_coordinates
-    )
+    roi = get_bounds_from_coordinates(buffer_m=350, roi_coordinates=s2_config.roi)
 
     s2_downloader = SentinelDownloader(s2_config.collection)
     s2_downloader.set_system_id(roi=roi, start_date="2022-04-01", end_date="2022-05-30")
