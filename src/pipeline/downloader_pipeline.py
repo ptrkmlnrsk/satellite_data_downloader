@@ -8,6 +8,8 @@ class Pipeline:
         self.output_dir = Path(output_dir)
 
     def fetch(self):
+        # TODO QueryParams
+        # TODO AssetInfoObtainer -> check validity -> download
         return self
 
     def process(self):
