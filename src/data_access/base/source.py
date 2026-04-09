@@ -1,4 +1,6 @@
 from abc import ABC, abstractmethod
+
+from src.domain.image_request import ImageRequest
 from src.domain.metadata import ImageMetadata
 
 
@@ -18,7 +20,7 @@ class ImagerySource(ABC):
         pass
 
     @abstractmethod
-    def download(self, image_request):  # raster?
+    def download(self, image_request: ImageRequest):  # raster?
         pass
 
     # TODO porownywarki

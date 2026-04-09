@@ -1,5 +1,5 @@
 from src.data_access.base.source import ImagerySource
-from src.data_access.gee.asset_downloader import GEEImageDownloader
+from src.data_access.gee.image_downloader import GEEImageDownloader
 from src.domain.query import QueryParameters
 from src.domain.image_request import GEEImageRequest
 from src.domain.metadata import ImageMetadata
