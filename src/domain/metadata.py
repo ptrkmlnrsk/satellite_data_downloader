@@ -3,6 +3,8 @@ from dataclasses import dataclass
 
 @dataclass
 class ImageMetadata:
+    """Image metadata dataclass"""
+
     image_id: str
     product_id: str
     acquired_at: str

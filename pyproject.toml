@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "satellite-data-explorer"
+version = "0.1.0"
+description = "Satellite imagery downloader and processing service built on Google Earth Engine."
+readme = { text = "Satellite imagery downloader and processing service built on Google Earth Engine.", content-type = "text/markdown" }
+requires-python = ">=3.14"
+dependencies = [
+    "earthengine-api>=1.7.14",
+    "fastapi>=0.129.0",
+    "geemap>=0.37.1",
+    "google-auth>=2.48.0",
+    "google-auth-oauthlib>=1.2.4",
+    "numpy>=2.4.2",
+    "pydantic>=2.12.5",
+    "python-dotenv>=1.2.1",
+    "rasterio>=1.5.0",
+    "sqlalchemy>=2.0.46",
+    "uvicorn>=0.41.0",
+]
+
+[project.optional-dependencies]
+postgres = ["psycopg2>=2.9.11"]
+
+[project.scripts]
+satellite-api = "main:main"
+satellite-cli = "src.cli.main:main"
+
+[dependency-groups]
+dev = [
+    "bandit>=1.8.6",
+    "pre-commit>=4.5.1",
+    "ruff>=0.14.0",
+]
+
+[tool.setuptools.packages.find]
+include = ["src*"]
+
+[tool.uv]
+package = true

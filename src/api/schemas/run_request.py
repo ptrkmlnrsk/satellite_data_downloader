@@ -3,6 +3,8 @@ from src.domain.enums.collections import Collections
 
 
 class RunRequest(BaseModel):
+    """Pydantic model for the request body"""
+
     dataset: str
     coordinates: list[float] | None = None
     collection: Collections
