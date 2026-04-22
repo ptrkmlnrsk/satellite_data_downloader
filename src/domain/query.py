@@ -21,12 +21,12 @@ class QueryParameters:
     """
 
     dataset: str  # GEE albo Planetary Engine/AWS
-    collection: str | Any  # TODO collection as str enum
+    collection: str | Any
     start_date: date | None
     end_date: date | None
     coordinates: list[float]
     cloud_cover: float
-    bands: list[str]  # TODO bands enum
+    bands: list[str]
     buffer: int = 350
     # sensor: str
 

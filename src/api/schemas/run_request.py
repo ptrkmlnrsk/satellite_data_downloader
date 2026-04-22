@@ -11,4 +11,4 @@ class RunRequest(BaseModel):
     start_date: str | None = None
     end_date: str | None = None
     cloud_cover: int | None = None
-    bands: list[str] = ["B2", "B3", "B4"]
+    bands: list[str]

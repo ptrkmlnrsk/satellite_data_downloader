@@ -37,10 +37,10 @@ def run_pipeline(payload: RunRequest):
 
     query_parameters = QueryParameters(
         dataset=payload.dataset,
+        coordinates=payload.coordinates,
         collection=collection_enum.SENTINEL_2.value,
         start_date=payload.start_date,
         end_date=payload.end_date,
-        coordinates=payload.coordinates,
         cloud_cover=payload.cloud_cover,
         bands=payload.bands,
     )

@@ -10,7 +10,7 @@ from src.data_access.gee.utils.get_metadata import get_gee_metadata_of_image
 class GEEImageService(ImagerySource):
     """
     Dedicated pipeline for downloading images from Earth Engine. Combines
-    all steps to download particular image
+    all steps to download particular image.
     """
 
     def __init__(

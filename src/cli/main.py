@@ -11,7 +11,7 @@ from src.data_access.gee.image_info_service import GEEImageInfoService
 # )
 from src.domain.query import QueryParameters
 from src.domain.enums.collections import Collections
-from src.domain.enums.bands import Bands
+from src.domain.enums.sentinel2_bands import Sentinel2Bands
 
 # TODO kompletny bajzel do ogarniecia, to powinno mieć tylko cos w stylu "run_pipeline"
 
@@ -45,14 +45,14 @@ def main():
         "--bands",
         type=str,
         nargs="+",
-        choices=[b.value for b in Bands],
+        choices=[b.value for b in Sentinel2Bands],
         help="Available bands: ",
     )
 
     args = parser.parse_args()
 
     collection_enum = Collections(args.collection)
-    bands_enum = [Bands(b) for b in args.bands] if args.bands else []
+    bands_enum = [Sentinel2Bands(b) for b in args.bands] if args.bands else []
 
     query_parameters = QueryParameters(
         dataset=args.dataset,
