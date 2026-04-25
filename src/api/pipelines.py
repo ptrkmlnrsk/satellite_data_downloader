@@ -1,9 +1,13 @@
-from src.data_access.gee.gee_service import GEEImageService
-from src.data_access.gee.orchestrator import Orchestrator
+from src.api.schemas.download_image import GEEImageDownload
+
+# from src.data_access.gee.gee_service import GEEImageService
+# from src.data_access.gee.orchestrator import Orchestrator
 from src.data_access.gee.image_downloader import GEEImageDownloader
 from src.data_access.gee.image_info_service import GEEImageInfoService
+from src.data_access.gee.utils.get_metadata import get_gee_metadata_of_image
 from src.domain.query import QueryParameters
 from src.domain.enums.collections import Collections
+from src.domain.image_request import GEEImageRequest
 from src.api.schemas.run_request import Sentinel2Request
 
 from fastapi import APIRouter
@@ -11,12 +15,8 @@ from fastapi import APIRouter
 router = APIRouter()
 
 
-# wszystko co poniżej to przerzucic do innego pliku
-# zrobic sobie router
-@router.post("/run")
-def run_pipeline(payload: Sentinel2Request):
-    print(payload)
-    print(payload.bands[0].is_10m)
+@router.post("/search")
+def search_image(payload: Sentinel2Request):
     collection_enum = Collections(payload.collection)
 
     query_parameters = QueryParameters(
@@ -28,23 +28,20 @@ def run_pipeline(payload: Sentinel2Request):
         cloud_cover=payload.cloud_cover,
         bands=payload.bands,
     )
-
     gee_image_info_service = GEEImageInfoService(query_parameters)
-    gee_image_downloader = GEEImageDownloader()
-    gee_service = GEEImageService(
-        query_parameters,
-        gee_image_info_service,
-        gee_image_downloader,
+    image_id = gee_image_info_service.get_image_id()
+    metadata = get_gee_metadata_of_image(image_id)
+
+    return metadata
+
+
+@router.post("/download")
+def download_image(payload: GEEImageDownload):
+    image_request = GEEImageRequest(
+        image_id=payload.image_id,
+        roi=payload.roi,
+        bands=payload.bands,
     )
 
-    orchestrator = Orchestrator()
-    orchestrator.set_source(gee_service)
-    result = orchestrator.run_process()
-
-    # return {
-    #    "message": "Pipeline executed",
-    #    "collection": payload.collection,
-    #    "dataset": payload.dataset,
-    #    "bands": payload.bands,
-    # }
-    return result
+    gee_image_downloader = GEEImageDownloader()
+    gee_image_downloader.export_geotiff(image_request)

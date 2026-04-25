@@ -12,5 +12,5 @@ class GEEImageRequest(ImageRequest):
     """An object to represent an Earth Engine image request"""
 
     image_id: str
-    roi: Geometry
+    roi: Geometry  # TODO geojson
     bands: list[str]

@@ -34,6 +34,14 @@ class GEEImageService(ImagerySource):
         """Returns metadata of image"""
         return get_gee_metadata_of_image(image_id)
 
+    def build_image_request(self, metadata: ImageMetadata) -> GEEImageRequest:
+        """Builds GEEImageRequest object"""
+        return GEEImageRequest(
+            image_id=metadata.image_id,
+            bands=self.query_parameters.bands,
+            roi=self.gee_image_info_service.build_gee_roi(),
+        )
+
     def download(self, image_request: GEEImageRequest) -> None:
         """Downloads selected asset."""
         return self.gee_image_downloader.export_geotiff(image_request)

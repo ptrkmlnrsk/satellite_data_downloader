@@ -28,7 +28,6 @@ class QueryParameters:
     cloud_cover: float
     bands: list[str]
     buffer: int = 350
-    # sensor: str
 
     # @property
     # def roi(self):

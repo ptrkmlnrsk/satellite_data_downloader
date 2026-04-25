@@ -20,6 +20,10 @@ class ImagerySource(ABC):
         pass
 
     @abstractmethod
+    def build_image_request(self, image_id: str) -> ImageRequest:
+        pass
+
+    @abstractmethod
     def download(self, image_request: ImageRequest):  # raster?
         pass
 
