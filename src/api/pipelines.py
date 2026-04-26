@@ -1,4 +1,4 @@
-from src.api.schemas.download_image import GEEImageDownload
+# from src.api.schemas.download_image import GEEImageDownload
 
 # from src.data_access.gee.gee_service import GEEImageService
 # from src.data_access.gee.orchestrator import Orchestrator
@@ -8,6 +8,7 @@ from src.data_access.gee.utils.get_metadata import get_gee_metadata_of_image
 from src.domain.query import QueryParameters
 from src.domain.enums.collections import Collections
 from src.domain.image_request import GEEImageRequest
+from src.api.schemas.download_image import GEEImageDownload
 from src.api.schemas.run_request import Sentinel2Request
 
 from fastapi import APIRouter

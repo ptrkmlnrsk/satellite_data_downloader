@@ -29,7 +29,7 @@ class GEEImageDownloader:
         image_to_download = (
             Image(selected_image.image_id)
             .select(selected_image.bands)
-            .clip(selected_image.roi)
+            .clip(selected_image.convert_to_gee_roi())
         )
 
         safe_id = selected_image.image_id.replace("/", "_")
@@ -42,7 +42,7 @@ class GEEImageDownloader:
                 image_to_download,
                 filename=str(output_name),
                 scale=10,
-                region=selected_image.roi,
+                region=selected_image.convert_to_gee_roi(),
                 file_per_band=False,
             )
 
