@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from datetime import date
-from typing import Any
+
+from src.domain.enums.sentinel2_bands import Sentinel2Band
 
 
 @dataclass
@@ -21,12 +22,13 @@ class QueryParameters:
     """
 
     dataset: str  # GEE albo Planetary Engine/AWS
-    collection: str | Any
+    collection: str
     start_date: date | None
     end_date: date | None
-    coordinates: list[float]
+    coordinates: tuple[float, float]
+    # roi: list[list[tuple[float, float]]]
     cloud_cover: float
-    bands: list[str]
+    bands: list[Sentinel2Band]
     buffer: int = 350
 
     # @property

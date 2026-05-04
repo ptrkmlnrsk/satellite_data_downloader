@@ -1,20 +1,14 @@
-from src.domain.polygon import PolygonModel
+# from src.domain.polygon import Polygon
 
-from dataclasses import dataclass
-from ee import Geometry
-
-
-class ImageRequest:
-    image_id: str
+# from dataclasses import dataclass
+from pydantic import BaseModel
+from src.domain.enums.sentinel2_bands import Sentinel2Band
 
 
-@dataclass
-class GEEImageRequest(ImageRequest):
-    """An object to represent an Earth Engine image request"""
+class GEEImageRequest(BaseModel):
+    """An object to represent an Earth Engine image request.
+    Roi parameter has to be Polygon object with at least 3 vertices."""
 
     image_id: str
-    roi: PolygonModel
-    bands: list[str]
-
-    def convert_to_gee_roi(self):
-        return Geometry(self.roi.model_dump())
+    bands: list[Sentinel2Band]
+    roi: list[list[tuple[float, float]]] | tuple[float, float]

@@ -54,7 +54,7 @@ class Sentinel2Band(Enum):
 
     @property
     def is_10m(self):
-        """Checks if band is 1 0m resolution."""
+        """Checks if band is 10m resolution."""
         return self.resolution == 10
 
     @classmethod

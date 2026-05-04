@@ -13,10 +13,10 @@ from ee import Geometry
 
 
 def get_bounds_from_coordinates(
-    roi_coordinates: list[float], buffer_m: int
+    point_coordinates: tuple[float, float], buffer_m: int
 ) -> Geometry:
     """
     This method creates circular buffer ROI of point that EE converts to bounding box.
     S2Downloader.build_roi deprecated
     """
-    return Geometry.Point(roi_coordinates).buffer(buffer_m).bounds()
+    return Geometry.Point(point_coordinates).buffer(buffer_m).bounds()

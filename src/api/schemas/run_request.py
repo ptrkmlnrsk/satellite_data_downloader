@@ -9,12 +9,13 @@ class Sentinel2Request(BaseModel):
     """Pydantic model for the request body"""
 
     dataset: str
-    coordinates: list[float] | None = None
+    coordinates: tuple[float, float] | None = None
     collection: Collections
     start_date: date | None = None
     end_date: date | None = None
     cloud_cover: int | None = None
     bands: list[Sentinel2Band]
+    # roi: list[list[tuple[float, float]]] | None = None
 
     # zanim sie stworzy obiekt tej klasy to zostanie wywolany ten walidator
     @field_validator("bands", mode="before")

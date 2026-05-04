@@ -39,7 +39,7 @@ class GEEImageService(ImagerySource):
         return GEEImageRequest(
             image_id=metadata.image_id,
             bands=self.query_parameters.bands,
-            roi=self.gee_image_info_service.build_gee_roi(),
+            roi=self.query_parameters.coordinates,
         )
 
     def download(self, image_request: GEEImageRequest) -> None:
