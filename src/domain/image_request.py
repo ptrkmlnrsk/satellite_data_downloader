@@ -1,16 +1,18 @@
-from dataclasses import dataclass
+# from src.domain.polygon import Polygon
 
-from ee import Geometry
-
-
-class ImageRequest:
-    image_id: str
+# from dataclasses import dataclass
+from pydantic import BaseModel
+from src.domain.enums.sentinel2_bands import Sentinel2Band
 
 
-@dataclass
-class GEEImageRequest(ImageRequest):
-    """An object to represent an Earth Engine image request"""
+class GEEImageRequest(BaseModel):
+    """An object to represent an Earth Engine image request.
+    Roi parameter has to be Polygon object with at least 3 vertices."""
 
     image_id: str
-    roi: Geometry
     bands: list[str]
+    roi: list[list[tuple[float, float]]] | tuple[float, float]
+
+    @classmethod
+    def validate_bands(cls, bands: list[str]):
+        return [Sentinel2Band.from_any(b) for b in bands]

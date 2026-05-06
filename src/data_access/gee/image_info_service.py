@@ -17,7 +17,7 @@ class GEEImageInfoService:
         if self.query_params.coordinates is None:
             return None
         return get_bounds_from_coordinates(
-            roi_coordinates=self.query_params.coordinates,
+            point_coordinates=self.query_params.coordinates,
             buffer_m=self.query_params.buffer,
         )
 
@@ -30,6 +30,9 @@ class GEEImageInfoService:
         Sets GEE system id of image.
         """
         roi = self.build_gee_roi()
+
+        if self.query_params.collection is None:
+            raise Exception("No collection provided")
 
         collection = (
             ImageCollection(self.query_params.collection)
@@ -44,7 +47,7 @@ class GEEImageInfoService:
         )
 
         if collection.size().getInfo() == 0:
-            raise Exception("Invalid collection")
+            raise Exception("No data found for given parameters")
 
         img = collection.sort("CLOUDY_PIXEL_PERCENTAGE").first()
 

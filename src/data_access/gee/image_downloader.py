@@ -4,6 +4,8 @@ from geemap import ee_export_image
 
 from src.tools.constants import DATA_DIR
 from src.domain.image_request import GEEImageRequest
+from src.domain.polygon import Polygon
+from src.data_access.gee.utils.convert_roi_to_gee import convert_to_gee_roi
 
 
 class GEEImageDownloader:
@@ -11,9 +13,6 @@ class GEEImageDownloader:
     Object that represents an Earth Engine image downloader.
     Requires GEEImageRequest object.
     """
-
-    # def __init__(self, selected_image: GEEImageRequest) -> None:
-    #    self.selected_image = selected_image
 
     def export_geotiff(self, selected_image: GEEImageRequest) -> None:
         """
@@ -26,10 +25,18 @@ class GEEImageDownloader:
         :param roi:
         :return:
         """
+        polygon = Polygon(selected_image.roi)
+        gee_polygon = convert_to_gee_roi(polygon)
+
+        """
+        Zmienione w requestcie to w jaki sposob wspolrzedne w slowniku
+        zaminieniają się na ROI. Dodano mozliwosc wrzucenia jako tuple i
+        list koordynatow jako poligon. Do sprawdzenia czy zadziała.
+        """
         image_to_download = (
             Image(selected_image.image_id)
             .select(selected_image.bands)
-            .clip(selected_image.roi)
+            .clip(gee_polygon)
         )
 
         safe_id = selected_image.image_id.replace("/", "_")
@@ -42,7 +49,7 @@ class GEEImageDownloader:
                 image_to_download,
                 filename=str(output_name),
                 scale=10,
-                region=selected_image.roi,
+                region=gee_polygon,
                 file_per_band=False,
             )
 
