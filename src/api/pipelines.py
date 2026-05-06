@@ -19,17 +19,17 @@ router = APIRouter()
 
 
 @router.post("/search")
-def search_image(payload: Sentinel2Request):  # Pydantic model -> co zwraca endpoint
-    collection_enum = Collections(payload.collection)
+def search_image(request: Sentinel2Request):  # Pydantic model -> co zwraca endpoint
+    collection_enum = Collections(request.collection)
 
     query_parameters = QueryParameters(  # dataclass -> input usera
-        dataset=payload.dataset,
-        coordinates=payload.coordinates,
+        dataset=request.dataset,
+        coordinates=request.coordinates,
         collection=collection_enum.value,
-        start_date=payload.start_date,
-        end_date=payload.end_date,
-        cloud_cover=payload.cloud_cover,
-        bands=payload.bands,
+        start_date=request.start_date,
+        end_date=request.end_date,
+        cloud_cover=request.cloud_cover,
+        bands=request.bands,
     )
     gee_image_info_service = GEEImageInfoService(query_parameters)
     image_id = gee_image_info_service.get_image_id()

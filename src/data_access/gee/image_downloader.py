@@ -5,6 +5,7 @@ from geemap import ee_export_image
 from src.tools.constants import DATA_DIR
 from src.domain.image_request import GEEImageRequest
 from src.domain.polygon import Polygon
+from src.data_access.gee.utils.convert_roi_to_gee import convert_to_gee_roi
 
 
 class GEEImageDownloader:
@@ -25,6 +26,7 @@ class GEEImageDownloader:
         :return:
         """
         polygon = Polygon(selected_image.roi)
+        gee_polygon = convert_to_gee_roi(polygon)
 
         """
         Zmienione w requestcie to w jaki sposob wspolrzedne w slowniku
@@ -34,7 +36,7 @@ class GEEImageDownloader:
         image_to_download = (
             Image(selected_image.image_id)
             .select(selected_image.bands)
-            .clip(polygon.convert_to_gee_roi())
+            .clip(gee_polygon)
         )
 
         safe_id = selected_image.image_id.replace("/", "_")
@@ -47,7 +49,7 @@ class GEEImageDownloader:
                 image_to_download,
                 filename=str(output_name),
                 scale=10,
-                region=selected_image.convert_to_gee_roi(),
+                region=gee_polygon,
                 file_per_band=False,
             )
 

@@ -14,7 +14,7 @@ class Sentinel2Request(BaseModel):
     start_date: date | None = None
     end_date: date | None = None
     cloud_cover: int | None = None
-    bands: list[Sentinel2Band]
+    bands: list[str]
     # roi: list[list[tuple[float, float]]] | None = None
 
     # zanim sie stworzy obiekt tej klasy to zostanie wywolany ten walidator
@@ -23,3 +23,5 @@ class Sentinel2Request(BaseModel):
         cls, bands
     ):  # to jakie pole podam w walidatorze to jego wartosc bedzie pod bands
         return [Sentinel2Band.from_any(b) for b in bands]
+
+    # TODO do wypierdolenia te bands z tego requestu

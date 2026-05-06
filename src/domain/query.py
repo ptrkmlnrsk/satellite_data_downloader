@@ -1,8 +1,6 @@
 from dataclasses import dataclass
 from datetime import date
 
-from src.domain.enums.sentinel2_bands import Sentinel2Band
-
 
 @dataclass
 class QueryParameters:
@@ -28,7 +26,7 @@ class QueryParameters:
     coordinates: tuple[float, float]
     # roi: list[list[tuple[float, float]]]
     cloud_cover: float
-    bands: list[Sentinel2Band]
+    bands: list[str]
     buffer: int = 350
 
     # @property
