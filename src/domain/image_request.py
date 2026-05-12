@@ -1,7 +1,5 @@
-# from src.domain.polygon import Polygon
-
-# from dataclasses import dataclass
 from pydantic import BaseModel
+
 from src.domain.enums.sentinel2_bands import Sentinel2Band
 
 
