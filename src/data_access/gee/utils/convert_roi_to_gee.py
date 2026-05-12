@@ -1,4 +1,4 @@
-from src.domain.polygon import Polygon
+from src.api.schemas.polygon_model import Polygon
 
 
 def convert_to_gee_roi(roi: Polygon):

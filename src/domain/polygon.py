@@ -1,6 +1,7 @@
 from dataclasses import dataclass
+from src.api.schemas.polygon_model import Coordinate
 
 
 @dataclass
 class Polygon:
-    coordinates: list[list[tuple[float, float]]]
+    coordinates: list[list[Coordinate]]
