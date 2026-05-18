@@ -35,6 +35,7 @@ class GEEImageDownloader:
         image_to_download = (
             Image(selected_image.image_id)
             .select(selectors=selected_image.bands, names=selected_image.bands_renamed)
+            # TODO nazwy bandów nie zapisują się do rasterio descriptions
             .clip(gee_polygon)
         )
 
