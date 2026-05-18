@@ -1,23 +1,3 @@
-# from enum import Enum
-
-# class Sentinel2Bands(Enum):
-#    """Enum object for Sentinel 2 bands.
-#    10 m resolution bands:
-#    B2, B3, B4, B8"""
-#
-#    BLUE = {"code": "B2", "resolution": 10, "description": "Blue band"}
-#    GREEN = "B3"
-#    RED = "B4"
-#    RED_EDGE_1 = "B5"
-#    RED_EDGE_2 = "B6"
-#    RED_EDGE_3 = "B7"
-#    NIR = "B8"
-#    RED_EDGE_4 = "B8A"
-#    WATER_VAPOUR = "B9"
-#    CIRRUS = "B10"
-#    SWIR_1 = "B11"
-#    SWIR_2 = "B12"
-
 from enum import Enum
 
 
@@ -56,6 +36,10 @@ class Sentinel2Band(Enum):
     def is_10m(self):
         """Checks if band is 10m resolution."""
         return self.resolution == 10
+
+    @classmethod
+    def list_bands(cls) -> list[tuple[str, int]]:
+        return [band.value for band in cls]
 
     @classmethod
     def bands_10m(cls):

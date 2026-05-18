@@ -1,7 +1,5 @@
-# from src.domain.polygon import Polygon
-
-# from dataclasses import dataclass
 from pydantic import BaseModel
+
 from src.domain.enums.sentinel2_bands import Sentinel2Band
 
 
@@ -11,6 +9,7 @@ class GEEImageRequest(BaseModel):
 
     image_id: str
     bands: list[str]
+    bands_renamed: list[str]  # dodane bands renamed
     roi: list[list[tuple[float, float]]] | tuple[float, float]
 
     @classmethod
