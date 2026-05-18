@@ -34,7 +34,7 @@ class GEEImageDownloader:
         """
         image_to_download = (
             Image(selected_image.image_id)
-            .select(selected_image.bands)
+            .select(selectors=selected_image.bands, names=selected_image.bands_renamed)
             .clip(gee_polygon)
         )
 
@@ -52,7 +52,7 @@ class GEEImageDownloader:
                 file_per_band=False,
             )
 
-            print("Image has been successfully downloaded to ", DATA_DIR)
-
         except Exception:
             print_exc()
+
+        print("Image has been successfully downloaded to ", DATA_DIR)

@@ -11,6 +11,7 @@ def get_image_preview(selected_image: GEEImageRequest) -> str:
         "bands": selected_image.bands,  # np. ["B4", "B3", "B2"] dla true color
         "min": 0,
         "max": 3000,
+        "gamma": 1.2,
         "dimensions": 512,
         "region": selected_image.roi,
         "format": "png",

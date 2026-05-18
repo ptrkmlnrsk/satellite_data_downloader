@@ -9,6 +9,7 @@ class GEEImageRequest(BaseModel):
 
     image_id: str
     bands: list[str]
+    bands_renamed: list[str]  # dodane bands renamed
     roi: list[list[tuple[float, float]]] | tuple[float, float]
 
     @classmethod
